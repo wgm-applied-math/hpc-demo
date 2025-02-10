@@ -1,0 +1,7 @@
+#!/bin/bash
+
+export SBATCH_ARRAY_INX="1-5"
+
+sbatch \
+    --cpus-per-task=4 \
+    CountingDemoJob
