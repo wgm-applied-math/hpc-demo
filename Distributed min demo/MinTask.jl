@@ -37,7 +37,7 @@ end
 const NJobs = 20
 const CSize = 100
 # Jobs are random number generator seeds
-jobs = RemoteChannel(()->Channel{Union{Int}}(CSize))
+jobs = RemoteChannel(()->Channel{Int}(CSize))
 results = RemoteChannel(()->Channel{Tuple}(CSize))
 
 function make_jobs(n)
