@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# We could request a specific spread of tasks over nodes:
+# --nodes=3 --ntasks-per-node=4
+
+# But it also works to just ask for some number of tasks
+# and CPUs per task and let Slurm spread them out.
+sbatch \
+    --ntasks=10 \
+    --cpus-per-task=4 \
+    MinTaskJob

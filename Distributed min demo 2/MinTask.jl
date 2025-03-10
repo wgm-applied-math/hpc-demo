@@ -1,16 +1,17 @@
 #!/usr/bin/env julia
 
 using Distributed
+using RandomNumbers, Random123
 using SlurmClusterManager
 
 # Create processes according to the SLURM environment variables
-addprocs(SlurmManager(), exeflags="--threads=$(ENV["SLURM_CPUS_PER_TASK"])")
+addprocs(SlurmManager(), exeflags="--threads=$(ENV["SLURM_CPUS_PER_TASK"]) --project=@.")
 
 @everywhere begin
     using Random
     
     function seek_min(jobs, results)
-        println("Hello from process $(myid()) on $(gethostname()) nthreads = $(Threads.nthreads())")
+        println("Hello from process $(myid()) on $(gethostname()) nthreads = $(Threads.nthreads()) project = $(Base.active_project())")
         flush(stdout)
         while true
             println("Process $(myid()) on $(gethostname()) requesting job")
@@ -37,12 +38,15 @@ end
 const NJobs = 20
 const CSize = 100
 # Jobs are random number generator seeds
-jobs = RemoteChannel(()->Channel{Int}(CSize))
+jobs = RemoteChannel(()->Channel{UInt64}(CSize))
 results = RemoteChannel(()->Channel{Tuple}(CSize))
 
 function make_jobs(n)
+    # Going to try a counter/hash random number generator
+    # to generate what I hope are nearly-independent seeds.
+    g = Philox2x(8500)
     for j in 1:n
-        s = 8400 + j
+        s = rand(g, UInt64)
         println("About to put job $s into channel")
         flush(stdout)
         put!(jobs, s)
