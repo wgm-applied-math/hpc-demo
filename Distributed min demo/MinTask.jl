@@ -4,7 +4,7 @@ using Distributed
 using SlurmClusterManager
 
 # Create processes according to the SLURM environment variables
-addprocs(SlurmManager())
+addprocs(SlurmManager(), exeflags="--threads=$(ENV["SLURM_CPUS_PER_TASK"])")
 
 @everywhere begin
     using Random

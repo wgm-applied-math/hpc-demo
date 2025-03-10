@@ -1,5 +1,3 @@
 #!/bin/bash
 
-julia \
-    --threads=$SLURM_NTASKS_PER_NODE \
-    MinTask.jl
+julia MinTask.jl

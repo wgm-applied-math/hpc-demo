@@ -3,4 +3,5 @@
 sbatch \
     --nodes=3 \
     --ntasks-per-node=4 \
+    --cpus-per-task=4 \
     MinTaskJob
