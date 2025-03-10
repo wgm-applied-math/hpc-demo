@@ -1,0 +1,6 @@
+#!/bin/bash
+
+sbatch \
+    --nodes=3 \
+    --ntasks-per-node=4 \
+    MinTaskJob
