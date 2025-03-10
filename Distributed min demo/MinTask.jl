@@ -21,10 +21,13 @@ addprocs(SlurmManager(), exeflags="--threads=$(ENV["SLURM_CPUS_PER_TASK"])")
             println("Process $(myid()) on $(gethostname()) working on seed $s")
             flush(stdout)
             Random.seed!(s)
-            # make 10 normally distributed random numbers
-            x = randn(10)
-            # pick out the minimum
-            x_min = minimum(x)
+            xs = zeros(10)
+            Threads.@threads for j in 1:length(xs)
+                # make normally distributed random numbers and take the minimum
+                xs[j] = minimum(randn(10))
+            end
+            # pick out the grand minimum
+            x_min = minimum(xs)
             println("Process $(myid()) on $(gethostname()) sending $x_min")
             put!(results, (myid(), s, x_min))
         end
